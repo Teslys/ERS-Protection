@@ -6,6 +6,7 @@ $customers = array(
 );
 if(isset($_GET["ip"]) && isset($_GET["customerPass"]) && isset($_GET["id"]) && array_key_exists($_GET["id"], $customers)){
     $id = $_GET["id"];
+    $ip = $_GET["ip"];
     if($_GET["customerPass"] == $customers[$id])
     {
         $host = "123.123.123.123"; // proxy server ip
