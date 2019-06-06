@@ -117,7 +117,7 @@ class Web {
                             "localPort": s.lP,
                             "remoteIP": s.rIP,
                             "remotePort": s.rP,
-                            "lastBlockedCount": s.anormalBlockedIPCount,
+                            "lastBlockedCount": s.blockedIPsPerTime.length,
                             "owner": s.owner,
                             "note": s.note
                         }
@@ -134,7 +134,7 @@ class Web {
                         "localPort": s.lP,
                         "remoteIP": s.rIP,
                         "remotePort": s.rP,
-                        "lastBlockedCount": s.anormalBlockedIPCount,
+                        "lastBlockedCount": s.blockedIPsPerTime.length,
                         "owner": s.owner,
                         "note": s.note,
                         "lastIPsBlocked": s.blockedIPsPerTime
