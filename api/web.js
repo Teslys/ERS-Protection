@@ -1,10 +1,19 @@
 const express = require('express')
 const EventEmitter = require('events');
 const bodyParser = require('body-parser');
+var os = require('os-utils');
 
 class Web {
     constructor(db, apiKey) {
         this.db = db;
+        this.cpu = 0;
+        this.ram = 0;
+        this.resCheck = setInterval(() => {
+            os.cpuUsage((v) => {
+           this.cpu = Math.floor(v * 100) / 100, "ram";
+           this.ram = 100 - (100* os.freememPercentage()); 
+        })
+        }, 5000)
         this.servers = [];
         this.apiKey = apiKey;
         this.app = express()
@@ -38,16 +47,17 @@ class Web {
         this.servers = Object.keys(this.servers).reduce((object, key) => {
             if (key !== id) {
                 object[key] = this.servers[key]
-            }else{
+            } else {
                 this.servers[key].stop();
             }
             return object
         }, {})
+        this.events.emit("save");
     }
     attachServer(name, s) {
         this.servers[name] = s;
         s.events.on("onAttack", () => {
-            this.events.emit("attackNotif", name);
+            events.emit("attackNotif", name);
         });
     }
     validate(req, res, next) {
@@ -69,7 +79,7 @@ class Web {
         var s = this.servers[id];
         if (!checkValue(s, null))
             return;
-        if(s.lP != lP){
+        if (s.lP != lP) {
             s.lP = lP;
             s.stop();
             s.listen();
@@ -78,7 +88,7 @@ class Web {
         s.rP = rP;
         s.owner = owner;
         s.note = note;
-        
+
         var sindb = this.db.find({
             id: id
         })
@@ -86,9 +96,10 @@ class Web {
         sindb.rIP = rIP;
         sindb.rP = rP;
         sindb.owner = owner;
-        sisndb.note = note;
+        sindb.note = note;
 
         this.db.update(sindb);
+        this.events.emit("save");
     }
     pages() {
         var e = this.events;
@@ -147,6 +158,11 @@ class Web {
                 res.json({ "res": "succ" })
                 return;
             }
+            if (path == "/admin/resources") {
+                    res.json({ "cpu": this.cpu, "ram": this.ram})
+                return;
+
+            }
             if (!checkValue(req.query.id, res))
                 return;
             var s = this.servers[req.query.id];
@@ -192,6 +208,7 @@ class Web {
                 var owner = data.owner;
                 var note = data.note;
                 this.events.emit("addServer", id, lP, rIP, rP, owner, note);
+                this.events.emit("save");
                 res.json({ "res": "succ" })
                 return;
             }
@@ -264,4 +281,29 @@ class APIEvents extends EventEmitter { }
 
 module.exports = {
     Web
+}
+
+function cpuAverage() {
+
+    //Initialise sum of idle and time of cores and fetch CPU info
+    var totalIdle = 0, totalTick = 0;
+    var cpus = os.cpus();
+
+    //Loop through CPU cores
+    for (var i = 0, len = cpus.length; i < len; i++) {
+
+        //Select CPU core
+        var cpu = cpus[i];
+
+        //Total up the time in the cores tick
+        for (type in cpu.times) {
+            totalTick += cpu.times[type];
+        }
+
+        //Total up the idle time of the core
+        totalIdle += cpu.times.idle;
+    }
+
+    //Return the average Idle and Tick times
+    return { idle: totalIdle / cpus.length, total: totalTick / cpus.length };
 }

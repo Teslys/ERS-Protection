@@ -1,13 +1,14 @@
 <?php
 class ERSProtection {
-	function __construct($host,$port, $apiKey){
+	function __construct($id, $host,$port, $apiKey){
+		$this->id = $id;
 		$this->host = $host;
 		$this->port = $port;
 		$this->apiKey = $apiKey;
 	} 
 	
 	function allowIP($ip){
-		$url = "http://" . $this->host . ":" . $this->port . "/ips/allow?apiKey=" . $this->apiKey;
+		$url = "http://" . $this->host . ":" . $this->port . "/ips/allow?apiKey=" . $this->apiKey . "&id=" . $id;
 		$fields = [
 		    'ip'      => $ip
 		];

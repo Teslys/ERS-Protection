@@ -8,7 +8,7 @@ const fs = require("fs")
 const LOCAL_PORT = 6512
 const REMOTE_PORT = 30000
 const REMOTE_ADDR = "123.123.123.123";
-const API_KEY = "PelC654u8E15";
+const API_KEY = "EA185vPQUle1564";
 
 
 var db = new loki('proxies.json');
