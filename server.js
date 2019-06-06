@@ -2,11 +2,18 @@ var net = require('net');
 const EventEmitter = require('events');
 const Profile = require("./Profile").Profile;
 class Server {
-    constructor(listeningPort, remoteIp, remotePort) {
+    constructor(listeningPort, remoteIp, remotePort, owner, note) {
+        if (typeof owner == "undefined")
+            owner = null;
+        if (typeof note == "undefined")
+            note = null;
+        this.owner = owner;
+        this.note = note;
+
         this.anormalBlockedIPCount = 20;
         this.onAttack = false;
         this.interval = setInterval(() => { this.checkByTime(); }
-        , 1000 * 60);
+            , 1000 * 60);
         this.blockedIPsPerTime = [];
         this.lP = listeningPort;
         this.rIP = remoteIp;
@@ -18,10 +25,10 @@ class Server {
         this.server.on("error", (err) => this.events.emit("nError".err));
     }
     checkByTime() {
-        if(this.blockedIPsPerTime.length >= this.anormalBlockedIPCount){
+        if (this.blockedIPsPerTime.length >= this.anormalBlockedIPCount) {
             this.onAttack = true;
             this.events.emit("attack", this.blockedIPsPerTime);
-        }else{
+        } else {
             this.onAttack = false;
         }
 
