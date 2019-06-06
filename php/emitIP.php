@@ -4,7 +4,7 @@ require_once("ers-protection.php");
 $customers = array(
     "machine-1" => "15A1v8Ue4v5Q"
 );
-if(isset($_GET["ip"]) && isset($_GET["customerPass"]) && isset($_GET["id"]) && in_array($_GET["id"], $customers)){
+if(isset($_GET["ip"]) && isset($_GET["customerPass"]) && isset($_GET["id"]) && array_key_exists($_GET["id"], $customers)){
     $id = $_GET["id"];
     if($_GET["customerPass"] == $customers[$id])
     {

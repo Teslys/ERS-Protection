@@ -8,7 +8,7 @@ class ERSProtection {
 	} 
 	
 	function allowIP($ip){
-		$url = "http://" . $this->host . ":" . $this->port . "/ips/allow?apiKey=" . $this->apiKey . "&id=" . $id;
+		$url = "http://" . $this->host . ":" . $this->port . "/ips/allow?apiKey=" . $this->apiKey . "&id=" . $this->id;
 		$fields = [
 		    'ip'      => $ip
 		];
