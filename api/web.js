@@ -52,6 +52,7 @@ class Web {
             }
             return object
         }, {})
+        
         this.events.emit("save");
     }
     attachServer(name, s) {

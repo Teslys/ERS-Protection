@@ -1,5 +1,6 @@
 
 const Server = require('./server').Server;
+const FloodFilter = require('./filters/FloodFilter').FloodFilter;
 const Web = require('./api/web').Web;
 const RetroProfile = require("./profiles/RetroProfile").RetroProfile;
 const loki = require("lokijs");
@@ -52,16 +53,13 @@ web.events.on("save", () => {
 })
 function initServer(id, lP, rIP, rP, owner, note) {
     var server = new Server(lP, rIP, rP, owner, note);
+    var filter = new FloodFilter(server);
     web.attachServer(id, server);
-    server.profile = new RetroProfile(server);
+    server.profile = new RetroProfile(server, filter);
     server.listen();
 }
 
 
-process.on('uncaughtException', function (err) {
-    // Normalde burası olmamalıydı. Beta sürüm olduğu için bunu koyduk. KALDIRMAYIN!
-    console.log(err)
-});
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', function (text) {
@@ -74,3 +72,7 @@ function save(){
     var json = db.serialize();
     fs.writeFileSync("proxies.json", json);
 }
+process.on('uncaughtException', function (err) {
+    // Normalde burası olmamalıydı. Beta sürüm olduğu için bunu koyduk. KALDIRMAYIN!
+    //console.log(err)
+});

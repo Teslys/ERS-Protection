@@ -50,6 +50,7 @@ class Server {
     }
     _handleSocket(socket) {
         var client;
+        socket.setKeepAlive(true, 1000);
         var ip = socket.remoteAddress.replace(/^.*:/, '');
         socket.ip = ip;
         this.events.emit("connected", socket)
@@ -65,9 +66,16 @@ class Server {
 
         socket.pipe(client).pipe(socket);
 
-        socket.on('close', () => this.events.emit("close", socket));
+        socket.on('close', () => {
+            this.events.emit("close", socket);
+        });
+        socket.on('end', () => {
+            this.events.emit("end", socket);
+        });
 
-        socket.on('error', () => this.events.emit("error", socket));
+        socket.on('error', () => {
+            this.events.emit("error", socket);
+        });
     }
 }
 
