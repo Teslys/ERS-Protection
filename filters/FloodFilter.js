@@ -8,6 +8,9 @@ class FloodFilter extends Filter {
         this.debug = false;
         this.MAX_AMOUNT = 5;
         this.TOO_MANY_IPS = 100000;
+        this.clearing = setInterval(() => {
+            this.ips = {};
+        }, 60 * 1000)
     }
     countIPConnect(ip) {
         if (typeof this.ips[ip] == "undefined")
