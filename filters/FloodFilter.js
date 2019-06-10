@@ -12,6 +12,9 @@ class FloodFilter extends Filter {
             this.ips = {};
         }, 60 * 1000)
     }
+    stop(){
+        clearInterval(this.clearing);
+    }
     countIPConnect(ip) {
         if (typeof this.ips[ip] == "undefined")
             this.ips[ip] = 1;

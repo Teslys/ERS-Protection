@@ -10,7 +10,7 @@ class Web {
         this.ram = 0;
         this.resCheck = setInterval(() => {
             os.cpuUsage((v) => {
-           this.cpu = Math.floor(v * 100) / 100, "ram";
+           this.cpu = Math.floor(v * 100);
            this.ram = 100 - (100* os.freememPercentage()); 
         })
         }, 5000)

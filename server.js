@@ -39,6 +39,7 @@ class Server {
         this.events.emit("listening", this.server)
     }
     stop() {
+        this.profile.filter.stop();
         this.server.close();
         this.events.emit("closed", this.server);
         clearInterval(this.interval);
@@ -51,6 +52,7 @@ class Server {
     _handleSocket(socket) {
         var client;
         socket.setKeepAlive(true, 1000);
+        socket.setTimeout(500);
         var ip = socket.remoteAddress.replace(/^.*:/, '');
         socket.ip = ip;
         this.events.emit("connected", socket)
@@ -58,17 +60,22 @@ class Server {
             this.addBlockedReport(socket.ip);
             this.events.emit("refused", socket)
             socket.destroy();
+            socket.unref();
             return;
         }
 
         this.events.emit("accepted", socket)
         client = net.connect(this.rP, this.rIP);
-
         socket.pipe(client).pipe(socket);
 
         socket.on('close', () => {
             this.events.emit("close", socket);
         });
+        socket.on('timeout', () => {
+            //console.log("timeout")
+            this.events.emit("timeout", socket);
+            socket.destroy();
+          });
         socket.on('end', () => {
             this.events.emit("end", socket);
         });
