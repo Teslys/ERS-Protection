@@ -55,7 +55,7 @@ class Server {
     _handleSocket(socket) {
         var client;
         socket.setKeepAlive(true, 1000);
-        socket.setTimeout(500);
+        socket.setTimeout(1000 * 60 * 60 * 10);
         var ip = socket.remoteAddress.replace(/^.*:/, '');
         socket.ip = ip;
         this.events.emit("connected", socket)

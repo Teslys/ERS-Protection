@@ -82,7 +82,7 @@ class Web {
             return;
         if (s.lP != lP) {
             s.lP = lP;
-            s.stop();
+            s.stop(); 
             s.listen();
         }
         s.rIP = rIP;
@@ -92,7 +92,7 @@ class Web {
 
         var sindb = this.db.find({
             id: id
-        })
+        })[0]
 
         sindb.rIP = rIP;
         sindb.rP = rP;
