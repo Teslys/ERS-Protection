@@ -12,8 +12,6 @@ class Server {
 
         this.anormalBlockedIPCount = 20;
         this.onAttack = false;
-        this.interval = setInterval(() => { this.checkByTime(); }
-            , 1000 * 60);
         this.blockedIPsPerTime = [];
         this.lP = listeningPort;
         this.rIP = remoteIp;
@@ -23,6 +21,10 @@ class Server {
         this.check = (socket) => { return true; }
         this.server = net.createServer((socket) => { this._handleSocket(socket) });
         this.server.on("error", (err) => this.events.emit("nError".err));
+    }
+    startCount(){
+        this.interval = setInterval(() => { this.checkByTime(); }
+            , 1000 * 60);
     }
     checkByTime() {
         if (this.blockedIPsPerTime.length >= this.anormalBlockedIPCount) {
@@ -37,6 +39,7 @@ class Server {
     listen() {
         this.server.listen(this.lP);
         this.events.emit("listening", this.server)
+        this.startCount();
     }
     stop() {
         this.profile.filter.stop();
